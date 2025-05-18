@@ -34,23 +34,12 @@
  
     --radius: 0.5rem;
 
-    /* Custom tab title colors for light mode */
-    --tab-title: 222.2 47.4% 11.2%;
-    --tab-title-active: 221 83% 53%;
-
     /* Chart colors */
-    --chart-1: 221 83% 53%;    /* Blue */
-    --chart-2: 142 76% 36%;    /* Green */
-    --chart-3: 262 83% 58%;    /* Purple */
-    --chart-4: 48 96% 53%;     /* Yellow */
-    --chart-5: 0 84% 60%;      /* Red */
-    --chart-6: 31 90% 56%;     /* Orange */
-    --chart-7: 199 89% 48%;    /* Cyan */
-
-    /* Severity colors */
-    --critical: 0 84% 60%;     /* Red */
-    --high: 38 92% 50%;        /* Orange */
-    --medium: 142 76% 36%;     /* Green */
+    --chart-1: 215 100% 50%;
+    --chart-2: 142 76% 36%;
+    --chart-3: 45 93% 47%;
+    --chart-4: 346 87% 43%;
+    --chart-5: 270 76% 53%;
   }
  
   .dark {
@@ -82,23 +71,12 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
 
-    /* Custom tab title colors for dark mode */
-    --tab-title: 210 40% 98%;
-    --tab-title-active: 217.2 91.2% 59.8%;
-
-    /* Chart colors - adjusted for dark mode */
-    --chart-1: 217.2 91.2% 59.8%;  /* Light Blue */
-    --chart-2: 142 70.6% 45.3%;    /* Light Green */
-    --chart-3: 262 83% 68%;        /* Light Purple */
-    --chart-4: 48 96% 63%;         /* Light Yellow */
-    --chart-5: 0 84% 70%;          /* Light Red */
-    --chart-6: 31 90% 66%;         /* Light Orange */
-    --chart-7: 199 89% 58%;        /* Light Cyan */
-
-    /* Severity colors - adjusted for dark mode */
-    --critical: 0 84% 70%;         /* Light Red */
-    --high: 38 92% 60%;            /* Light Orange */
-    --medium: 142 70.6% 45.3%;     /* Light Green */
+    /* Chart colors - darker variants for dark mode */
+    --chart-1: 215 80% 60%;
+    --chart-2: 142 70% 45%;
+    --chart-3: 45 85% 55%;
+    --chart-4: 346 75% 50%;
+    --chart-5: 270 70% 60%;
   }
 }
  
@@ -111,22 +89,95 @@
   }
 }
 
-/* Custom styles for tab titles */
-[data-active=true] .text-base {
-  @apply text-[hsl(var(--tab-title-active))] font-bold;
-  transition: color 0.2s ease-in-out;
+/* FullCalendar Styles */
+.fc {
+  @apply font-sans;
 }
 
-[data-active=false] .text-base {
-  @apply text-[hsl(var(--tab-title))] hover:text-[hsl(var(--tab-title-active))];
-  transition: color 0.2s ease-in-out;
+.fc .fc-toolbar-title {
+  @apply text-xl font-bold;
 }
 
-/* Ensure tab descriptions maintain proper contrast */
-[data-active=true] .text-muted-foreground {
-  @apply opacity-90;
+.fc .fc-button {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
 }
 
-[data-active=false] .text-muted-foreground {
-  @apply opacity-70;
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+  @apply bg-primary/80;
+}
+
+.fc .fc-button-primary:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.fc .fc-daygrid-day-number {
+  @apply text-sm font-medium;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  @apply bg-accent;
+}
+
+.fc .fc-daygrid-day-top {
+  @apply p-2;
+}
+
+.fc .fc-daygrid-day-events {
+  @apply mt-1;
+}
+
+.fc .fc-event {
+  @apply rounded-md border-none cursor-pointer;
+}
+
+.fc .fc-event-title {
+  @apply font-medium text-xs p-1;
+}
+
+.fc .fc-col-header-cell {
+  @apply py-2 font-medium;
+}
+
+.fc .fc-timegrid-slot {
+  @apply h-12;
+}
+
+.fc .fc-timegrid-axis {
+  @apply text-xs text-muted-foreground;
+}
+
+.fc .fc-timegrid-slot-label {
+  @apply text-xs text-muted-foreground;
+}
+
+.fc .fc-list-day-cushion {
+  @apply bg-accent;
+}
+
+.fc .fc-list-event:hover td {
+  @apply bg-accent/50;
+}
+
+.fc .fc-list-event-title {
+  @apply font-medium;
+}
+
+.fc .fc-list-event-time {
+  @apply text-sm text-muted-foreground;
+}
+
+/* Dark mode adjustments */
+.dark .fc-theme-standard .fc-list-day-cushion {
+  @apply bg-secondary;
+}
+
+.dark .fc .fc-daygrid-day.fc-day-today {
+  @apply bg-secondary;
+}
+
+.dark .fc-theme-standard td, 
+.dark .fc-theme-standard th,
+.dark .fc-theme-standard .fc-scrollgrid {
+  @apply border-border;
 }

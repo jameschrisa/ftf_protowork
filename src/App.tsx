@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react"
+import { Suspense, lazy, useState, useEffect } from "react"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { ThemeProvider } from "./components/theme-provider"
 import DashboardLayout from "./components/ui/dashboard-layout"
@@ -19,6 +19,8 @@ const DataManagement = lazy(() => import("./pages/DataManagement"))
 const Communications = lazy(() => import("./pages/Comms"))
 const Documentation = lazy(() => import("./pages/Documentation"))
 const Settings = lazy(() => import("./pages/Settings"))
+const Calendar = lazy(() => import("./pages/Calendar"))
+const DevMode = lazy(() => import("./pages/DevMode"))
 const NotFound = lazy(() => import("./pages/404"))
 
 // Loading component for Suspense fallback
@@ -32,8 +34,37 @@ function LoadingSpinner() {
 
 // Protected Route wrapper
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    // Check if localStorage has user data
+    const checkLocalStorage = () => {
+      try {
+        const storedUser = localStorage.getItem('user');
+        if (!storedUser) {
+          setIsLoading(false);
+        } else {
+          // Wait a bit to ensure auth state is fully initialized
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 500);
+        }
+      } catch (error) {
+        console.error('Error checking localStorage:', error);
+        setIsLoading(false);
+      }
+    };
+
+    checkLocalStorage();
+  }, []);
+
+  // Show loading spinner while checking authentication
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  // Redirect to login if not authenticated
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
@@ -65,6 +96,8 @@ function AppRoutes() {
         <Route path="trends" element={<Trends />} />
         <Route path="documentation" element={<Documentation />} />
         <Route path="settings" element={<Settings />} />
+        <Route path="calendar" element={<Calendar />} />
+        <Route path="dev-mode" element={<DevMode />} />
       </Route>
 
       {/* 404 page */}
@@ -77,15 +110,15 @@ export default function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark" storageKey="ftf-finance-theme">
-        <AuthProvider>
-          <BrowserRouter>
+        <BrowserRouter>
+          <AuthProvider>
             <Suspense fallback={<LoadingSpinner />}>
               <ErrorBoundary>
                 <AppRoutes />
               </ErrorBoundary>
             </Suspense>
-          </BrowserRouter>
-        </AuthProvider>
+          </AuthProvider>
+        </BrowserRouter>
       </ThemeProvider>
     </ErrorBoundary>
   )

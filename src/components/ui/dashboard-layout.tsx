@@ -2,9 +2,10 @@ import * as React from "react"
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
 import { cn } from "../../lib/utils"
 import { Toaster } from "sonner"
-import { Menu, PanelRightOpen, Search, Calendar, Smartphone, FileSearch } from "lucide-react"
+import { Menu, PanelRightOpen, Search, Calendar, Terminal, FileSearch } from "lucide-react"
 import { useState } from "react"
 import { QueryRequestDialog } from "./query-request-dialog"
+import { AdvancedSearchDialog } from "./advanced-search-dialog"
 import { Button } from "./button"
 import { ScrollArea } from "./scroll-area"
 import { Sheet, SheetContent, SheetTrigger } from "./sheet"
@@ -18,7 +19,7 @@ import { UserProfile } from "./user-profile"
 import * as Tooltip from '@radix-ui/react-tooltip'
 import logo from "../../assets/ftf/logo.svg"
 
-const activeNavClasses = "relative bg-orange-700/20 text-orange-500 before:absolute before:inset-0 before:rounded-lg before:border before:border-white/20 before:shadow-[0_0_15px_rgba(255,255,255,0.1)] before:pointer-events-none"
+const activeNavClasses = "relative bg-blue-700/20 text-blue-500 before:absolute before:inset-0 before:rounded-lg before:border before:border-white/20 before:shadow-[0_0_15px_rgba(255,255,255,0.1)] before:pointer-events-none"
 
 export default function DashboardLayout() {
   const [isCollapsed, setIsCollapsed] = React.useState(false)
@@ -241,18 +242,45 @@ export default function DashboardLayout() {
             <div className="flex items-center gap-2">
               {/* Query Request Dialog */}
               <QueryRequestDialogTrigger />
-              <Button variant="ghost" size="icon">
-                <Calendar className="h-5 w-5" />
-                <span className="sr-only">Calendar</span>
-              </Button>
-              <Button variant="ghost" size="icon">
-                <FileSearch className="h-5 w-5" />
-                <span className="sr-only">Advanced Search</span>
-              </Button>
-              <Button variant="ghost" size="icon">
-                <Smartphone className="h-5 w-5" />
-                <span className="sr-only">Integrations</span>
-              </Button>
+              
+              {/* Calendar Button with Tooltip */}
+              <Tooltip.Provider>
+                <Tooltip.Root>
+                  <Tooltip.Trigger asChild>
+                    <Button variant="ghost" size="icon" onClick={() => navigate('/calendar')}>
+                      <Calendar className="h-5 w-5" />
+                      <span className="sr-only">Calendar</span>
+                    </Button>
+                  </Tooltip.Trigger>
+                  <Tooltip.Portal>
+                    <Tooltip.Content className="rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground animate-in fade-in-0 zoom-in-95">
+                      Financial Calendar
+                      <Tooltip.Arrow className="fill-primary" />
+                    </Tooltip.Content>
+                  </Tooltip.Portal>
+                </Tooltip.Root>
+              </Tooltip.Provider>
+              
+              {/* Advanced Search Button with Tooltip */}
+              <AdvancedSearchDialogTrigger />
+              
+              {/* Dev Mode Button with Tooltip */}
+              <Tooltip.Provider>
+                <Tooltip.Root>
+                  <Tooltip.Trigger asChild>
+                    <Button variant="ghost" size="icon" onClick={() => navigate('/dev-mode')}>
+                      <Terminal className="h-5 w-5" />
+                      <span className="sr-only">Developer Mode</span>
+                    </Button>
+                  </Tooltip.Trigger>
+                  <Tooltip.Portal>
+                    <Tooltip.Content className="rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground animate-in fade-in-0 zoom-in-95">
+                      Developer Terminal
+                      <Tooltip.Arrow className="fill-primary" />
+                    </Tooltip.Content>
+                  </Tooltip.Portal>
+                </Tooltip.Root>
+              </Tooltip.Provider>
             </div>
             
             {/* Right side - notifications and user profile */}
@@ -286,6 +314,37 @@ function QueryRequestDialogTrigger() {
         <span>Submit Query / Request</span>
       </Button>
       <QueryRequestDialog open={open} onOpenChange={setOpen} />
+    </>
+  )
+}
+
+// Advanced Search Dialog Trigger Component
+function AdvancedSearchDialogTrigger() {
+  const [open, setOpen] = useState(false)
+  
+  return (
+    <>
+      <Tooltip.Provider>
+        <Tooltip.Root>
+          <Tooltip.Trigger asChild>
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => setOpen(true)}
+            >
+              <FileSearch className="h-5 w-5" />
+              <span className="sr-only">Advanced Search</span>
+            </Button>
+          </Tooltip.Trigger>
+          <Tooltip.Portal>
+            <Tooltip.Content className="rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground animate-in fade-in-0 zoom-in-95">
+              Advanced Search
+              <Tooltip.Arrow className="fill-primary" />
+            </Tooltip.Content>
+          </Tooltip.Portal>
+        </Tooltip.Root>
+      </Tooltip.Provider>
+      <AdvancedSearchDialog open={open} onOpenChange={setOpen} />
     </>
   )
 }

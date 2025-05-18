@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Button } from "../components/ui/button"
-import { Database, Network, FolderOpen, Clock, BarChart, Users } from "lucide-react"
+import { Database, Network, FolderOpen, Clock, BarChart, Users, PlusCircle } from "lucide-react"
 import { useState } from "react"
+import { DataConnectionDialog } from "../components/ui/data-connection-dialog"
 import { ERPSystemsTable } from "../components/data-management/erp-systems-table"
 import { APIIntegrationsTable } from "../components/data-management/api-integrations-table"
 import { SharedDrivesTable } from "../components/data-management/shared-drives-table"
@@ -11,10 +12,11 @@ import { sharedDrives } from "../data/shared-drives-data"
 
 export default function DataManagementPage() {
   const [activeView, setActiveView] = useState<'database' | 'api' | 'drives'>('database')
+  const [isConnectionDialogOpen, setIsConnectionDialogOpen] = useState(false)
 
   // Calculate metrics for cards
   const activeERPs = erpSystems.filter(system => system.status === 'active').length
-  const totalERPUsers = erpSystems.reduce((sum, system) => sum + system.userCount, 0)
+  const totalDataSources = erpSystems.length + apiIntegrations.length + sharedDrives.length
   
   const totalAPICalls = apiIntegrations.reduce((sum, api) => sum + api.callVolume, 0)
   const avgErrorRate = apiIntegrations.reduce((sum, api) => sum + api.errorRate, 0) / apiIntegrations.length
@@ -38,12 +40,18 @@ export default function DataManagementPage() {
 
   return (
     <div className="flex-1 space-y-8 p-4 md:p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Database className="h-8 w-8" />
           <h1 className="text-3xl font-bold tracking-tight">Data Management</h1>
         </div>
       </div>
+      
+      {/* New Data Connection Dialog */}
+      <DataConnectionDialog 
+        open={isConnectionDialogOpen} 
+        onOpenChange={setIsConnectionDialogOpen} 
+      />
       
       {/* Tabs Section */}
       <Card>
@@ -55,6 +63,13 @@ export default function DataManagementPage() {
                 Manage database connections, API integrations, and shared drives
               </p>
             </div>
+            <Button 
+              onClick={() => setIsConnectionDialogOpen(true)}
+              className="flex items-center gap-2"
+            >
+              <PlusCircle className="h-4 w-4" />
+              New Data Connection
+            </Button>
           </div>
           <div className="flex">
             <button
@@ -98,20 +113,20 @@ export default function DataManagementPage() {
         <CardContent className="p-6">
           {activeView === 'database' ? (
             <div className="space-y-6">
-              <div className="grid gap-4 md:grid-cols-4">
+              <div className="grid gap-4 md:grid-cols-3">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
-                      <span>Data Freshness</span>
-                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      <span>Number of Data Sources</span>
+                      <Database className="h-4 w-4 text-muted-foreground" />
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground mb-4">
-                      Last update timestamp for critical financial datasets
+                      Total number of connected data sources across all types
                     </p>
                     <div className="text-2xl font-bold text-center py-2">
-                      {freshness}
+                      {totalDataSources}
                     </div>
                   </CardContent>
                 </Card>
@@ -146,23 +161,6 @@ export default function DataManagementPage() {
                     </p>
                     <div className="text-2xl font-bold text-center py-2">
                       99.9%
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      <span>User Adoption</span>
-                      <Users className="h-4 w-4 text-muted-foreground" />
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Active users and login frequency for ERP systems
-                    </p>
-                    <div className="text-2xl font-bold text-center py-2">
-                      {totalERPUsers} users
                     </div>
                   </CardContent>
                 </Card>

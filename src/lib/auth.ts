@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export interface User {
   id: string;
@@ -16,13 +16,35 @@ interface AuthContextType {
 }
 
 const validateCredentials = (email: string, password: string): boolean => {
-  return email === 'admin@ftf.ai' && password === 'admin123';
+  return email === 'admin@ftf.ai' && password === 'ftf3$$$';
 };
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    // Initialize user state from localStorage on component creation
+    try {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser && parsedUser.id && parsedUser.email) {
+          return parsedUser;
+        }
+      }
+    } catch (error) {
+      console.error('Failed to parse stored user data:', error);
+      localStorage.removeItem('user');
+    }
+    return null;
+  });
+  
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Set initialized flag after component mount
+  useEffect(() => {
+    setIsInitialized(true);
+  }, []);
 
   const login = async (email: string, password: string) => {
     if (!validateCredentials(email, password)) {
@@ -52,6 +74,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     logout,
     isAuthenticated: !!user
   };
+
+  // Don't render children until we've checked for an existing session
+  if (!isInitialized) {
+    return null;
+  }
 
   return React.createElement(AuthContext.Provider, { value }, children);
 };
