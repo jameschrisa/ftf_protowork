@@ -1,6 +1,6 @@
 import { useAuth } from "../../lib/auth";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "./button";
+import { EnhancedAvatar } from "./enhanced-avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,20 +18,19 @@ export function UserProfile() {
     return null;
   }
 
-  const initials = user.name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={user.avatarUrl} alt={user.name} />
-            <AvatarFallback>{initials}</AvatarFallback>
-          </Avatar>
+          <EnhancedAvatar 
+            className="h-8 w-8"
+            name={user.name}
+            email={user.email}
+            avatarUrl={user.avatarUrl}
+            status="online"
+            avatarStyle="lorelei"
+            animated={true}
+          />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>

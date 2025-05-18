@@ -8,20 +8,35 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../co
 import { AlertMessage } from "../components/ui/alert";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../components/ui/dialog";
 import { motion } from "framer-motion";
+import { AnimatedBackground } from "../components/ui/animated-background";
+import { PasswordResetDialog } from "../components/ui/password-reset-dialog";
 import logo from "../assets/ftf/logo.svg";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, resetPassword } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [showTerms, setShowTerms] = useState(false);
+  const [showResetDialog, setShowResetDialog] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    
+    // Validate inputs
+    if (!email.trim()) {
+      setError("Please enter your email address.");
+      return;
+    }
+    
+    if (!password.trim()) {
+      setError("Please enter your password.");
+      return;
+    }
+    
     setIsLoading(true);
 
     try {
@@ -37,22 +52,17 @@ export default function Login() {
 
   return (
     <>
-      <div
-        className="min-h-screen flex items-center justify-center relative"
-        style={{
-          backgroundImage: `url(/ftf-bg.jpg)`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
+      <AnimatedBackground 
+        type="gradient" 
+        backgroundImage="/newbg.jpg" 
+        colorScheme="blue"
+        dark={true}
+        blur={true}
+        opacity={0.6}
       >
-        {/* Overlay for background image */}
-        <div
-          className="absolute inset-0 bg-background/90"
-          style={{ backdropFilter: 'blur(2px)' }}
-        />
-
-        {/* Login Card */}
-        <Card className="w-[400px] relative z-10 bg-background/95 backdrop-blur-sm">
+        <div className="min-h-screen flex items-center justify-center">
+          {/* Login Card */}
+          <Card className="w-[400px] relative z-10 bg-background/95 backdrop-blur-sm">
           <CardHeader className="space-y-4 flex flex-col items-center">
             <img src={logo} alt="Logo" className="h-12 w-12" />
             <div className="flex flex-col items-center space-y-2">
@@ -71,7 +81,7 @@ export default function Login() {
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
                 <div className="text-lg text-muted-foreground text-center">
-                  Financial Intelligence Dashboard
+                  AI Powered Financial Analyst
                 </div>
               </motion.div>
             </div>
@@ -97,7 +107,19 @@ export default function Login() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Password</Label>
+                  <Button
+                    variant="link"
+                    className="h-auto p-0 text-xs text-primary"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowResetDialog(true);
+                    }}
+                  >
+                    Forgot Password?
+                  </Button>
+                </div>
                 <Input
                   id="password"
                   type="password"
@@ -123,8 +145,9 @@ export default function Login() {
               </Button>
             </div>
           </CardContent>
-        </Card>
-      </div>
+          </Card>
+        </div>
+      </AnimatedBackground>
 
       <Dialog open={showTerms} onOpenChange={setShowTerms}>
         <DialogContent className="max-w-[600px] max-h-[80vh] overflow-y-auto">
@@ -134,7 +157,7 @@ export default function Login() {
           <div className="space-y-4 py-4 text-sm">
             <h3 className="font-semibold">1. Acceptance of Terms</h3>
             <p>
-              By accessing and using the ftf.ai Financial Intelligence Dashboard, you acknowledge that you have read,
+              By accessing and using the ftf.ai AI Powered Financial Analyst, you acknowledge that you have read,
               understood, and agree to be bound by these Terms of Use.
             </p>
 
@@ -175,6 +198,13 @@ export default function Login() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Password Reset Dialog */}
+      <PasswordResetDialog
+        open={showResetDialog}
+        onOpenChange={setShowResetDialog}
+        onResetPassword={resetPassword}
+      />
     </>
   );
 }

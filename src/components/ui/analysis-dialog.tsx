@@ -6,9 +6,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./dialog"
-import { Progress } from "./progress"
+import { EnhancedProgress } from "./enhanced-spinner"
 import { Check } from "lucide-react"
 import { cn } from "../../lib/utils"
+import { motion } from "framer-motion"
 
 interface AnalysisDialogProps {
   open: boolean
@@ -90,7 +91,13 @@ export function AnalysisDialog({ open, onOpenChange }: AnalysisDialogProps) {
           <DialogTitle>Analyzing Financial Data</DialogTitle>
         </DialogHeader>
         <div className="py-6">
-          <Progress value={progress} className="h-2" />
+          <EnhancedProgress 
+            value={progress} 
+            className="h-3" 
+            shimmer={true}
+            gradient={true}
+            showPercentage={true}
+          />
           <div className="mt-6 space-y-4">
             {steps.map((step, index) => (
               <div
@@ -104,11 +111,19 @@ export function AnalysisDialog({ open, onOpenChange }: AnalysisDialogProps) {
               >
                 <div className="flex-shrink-0 w-5 h-5">
                   {completedSteps.includes(index) ? (
-                    <div className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-500/20">
+                    <motion.div 
+                      initial={{ scale: 0.8, opacity: 0.8 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-500/20"
+                    >
                       <Check className="w-3 h-3 text-blue-500" />
-                    </div>
+                    </motion.div>
                   ) : index === currentStep ? (
-                    <div className="w-2 h-2 mt-1.5 rounded-full bg-blue-500 animate-pulse" />
+                    <motion.div 
+                      animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.7, 1, 0.7] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                      className="w-2 h-2 mt-1.5 rounded-full bg-blue-500"
+                    />
                   ) : (
                     <div className="w-2 h-2 mt-1.5 rounded-full bg-muted" />
                   )}
