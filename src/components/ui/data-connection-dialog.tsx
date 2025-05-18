@@ -1,12 +1,12 @@
 import { useState } from "react"
-import { 
-  Dialog,
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogFooter, 
-  DialogClose 
-} from "./dialog"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+  SheetClose
+} from "./sheet"
 import { Button } from "./button"
 import { Input } from "./input"
 import { Label } from "./label"
@@ -148,11 +148,11 @@ export function DataConnectionDialog({ open, onOpenChange }: DataConnectionDialo
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Setup New Data Connection</DialogTitle>
-        </DialogHeader>
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent side="right" className="w-[90vw] sm:w-[50vw] md:w-[50vw] lg:w-[50vw] max-w-[800px] p-6 overflow-y-auto">
+        <SheetHeader>
+          <SheetTitle>Setup New Data Connection</SheetTitle>
+        </SheetHeader>
         
         {/* AI Wizard Panel - conditionally rendered */}
         {isWizardOpen && (
@@ -203,7 +203,7 @@ export function DataConnectionDialog({ open, onOpenChange }: DataConnectionDialo
           </TabsList>
           
           {/* Database/ERP Tab Content */}
-          <TabsContent value="database" className="space-y-4">
+          <TabsContent value="database" className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="db-name">Connection Name</Label>
@@ -308,7 +308,7 @@ export function DataConnectionDialog({ open, onOpenChange }: DataConnectionDialo
           </TabsContent>
           
           {/* API Tab Content */}
-          <TabsContent value="api" className="space-y-4">
+          <TabsContent value="api" className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="api-name">API Name</Label>
@@ -414,7 +414,7 @@ export function DataConnectionDialog({ open, onOpenChange }: DataConnectionDialo
           </TabsContent>
           
           {/* Shared Drives Tab Content */}
-          <TabsContent value="drives" className="space-y-4">
+          <TabsContent value="drives" className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="drive-name">Drive Name</Label>
               <Input 
@@ -505,7 +505,7 @@ export function DataConnectionDialog({ open, onOpenChange }: DataConnectionDialo
           </div>
         )}
         
-        <DialogFooter className="flex items-center justify-between mt-4">
+        <SheetFooter className="flex items-center justify-between mt-6 pt-4 border-t">
           <div>
             {!isWizardOpen && (
               <Button 
@@ -535,9 +535,9 @@ export function DataConnectionDialog({ open, onOpenChange }: DataConnectionDialo
                 <>Test Connection</>
               )}
             </Button>
-            <DialogClose asChild>
+            <SheetClose asChild>
               <Button variant="outline">Cancel</Button>
-            </DialogClose>
+            </SheetClose>
             <Button 
               type="button"
               onClick={handleSaveConnection}
@@ -545,8 +545,8 @@ export function DataConnectionDialog({ open, onOpenChange }: DataConnectionDialo
               Save Connection
             </Button>
           </div>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   )
 }
