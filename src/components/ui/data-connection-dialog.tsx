@@ -150,7 +150,7 @@ export function DataConnectionDialog({ open, onOpenChange }: DataConnectionDialo
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-[90vw] sm:w-[50vw] md:w-[50vw] lg:w-[50vw] max-w-[800px] p-6 overflow-y-auto">
-        <SheetHeader>
+        <SheetHeader className="mb-6">
           <SheetTitle>Setup New Data Connection</SheetTitle>
         </SheetHeader>
         
@@ -186,17 +186,18 @@ export function DataConnectionDialog({ open, onOpenChange }: DataConnectionDialo
         )}
         
         {/* Connection Type Tabs */}
-        <Tabs defaultValue="database" onValueChange={setActiveTab}>
+        <div className="mt-4">
+          <Tabs defaultValue="database" onValueChange={setActiveTab}>
           <TabsList className="grid grid-cols-3 mb-4">
-            <TabsTrigger value="database" className="flex items-center">
+            <TabsTrigger value="database" className="flex items-center data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500">
               <Database className="h-4 w-4 mr-2" />
               <span>Database/ERP</span>
             </TabsTrigger>
-            <TabsTrigger value="api" className="flex items-center">
+            <TabsTrigger value="api" className="flex items-center data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500">
               <Network className="h-4 w-4 mr-2" />
               <span>API</span>
             </TabsTrigger>
-            <TabsTrigger value="drives" className="flex items-center">
+            <TabsTrigger value="drives" className="flex items-center data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500">
               <FolderOpen className="h-4 w-4 mr-2" />
               <span>Shared Drives</span>
             </TabsTrigger>
@@ -477,6 +478,7 @@ export function DataConnectionDialog({ open, onOpenChange }: DataConnectionDialo
             </div>
           </TabsContent>
         </Tabs>
+        </div>
         
         {/* Test Connection Result */}
         {testConnectionResult && (
