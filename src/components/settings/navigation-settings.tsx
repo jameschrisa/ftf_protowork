@@ -6,11 +6,12 @@ import { NavigationItem } from "../../config/navigation"
 export interface NavigationSettingsProps {
   navigation: NavigationItem[]
   footerNavigation: NavigationItem[]
+  onChange?: () => void
 }
 
 type NavSettings = Record<string, boolean>
 
-export function NavigationSettings({ navigation, footerNavigation }: NavigationSettingsProps) {
+export function NavigationSettings({ navigation, footerNavigation, onChange }: NavigationSettingsProps) {
   const initialSettings = [...navigation, ...footerNavigation].reduce(
     (acc, nav) => ({ ...acc, [nav.id]: true }), 
     {} as NavSettings
@@ -27,6 +28,7 @@ export function NavigationSettings({ navigation, footerNavigation }: NavigationS
       [id]: !settings[id]
     }
     setSettings(newSettings)
+    if (onChange) onChange()
   }
 
   return (

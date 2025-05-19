@@ -8,7 +8,11 @@ import { useLocalStorage } from "../../hooks/use-local-storage"
 import { toast } from "sonner"
 import { logger } from "../../lib/logger"
 
-export function LogSettings() {
+interface LogSettingsProps {
+  onChange?: () => void
+}
+
+export function LogSettings({ onChange }: LogSettingsProps) {
   const [logPath, setLogPath] = useLocalStorage<string>(
     "dashboard-log-path",
     ""
@@ -49,6 +53,9 @@ export function LogSettings() {
 
         // Log the directory change
         await logger.logActivity('Updated log directory', { path: dirHandle.name })
+        
+        // Notify parent of changes
+        if (onChange) onChange()
 
       } catch (permError) {
         console.error("Permission error:", permError)

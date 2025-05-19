@@ -11,8 +11,17 @@ import { Label } from "../ui/label"
 
 type Theme = "light" | "dark" | "system"
 
-export function ThemeSettings() {
+interface ThemeSettingsProps {
+  onChange?: () => void
+}
+
+export function ThemeSettings({ onChange }: ThemeSettingsProps) {
   const { theme, setTheme } = useTheme()
+
+  const handleThemeChange = (value: Theme) => {
+    setTheme(value)
+    if (onChange) onChange()
+  }
 
   return (
     <Card>
@@ -27,7 +36,7 @@ export function ThemeSettings() {
           <Label htmlFor="theme">Theme</Label>
           <Select
             value={theme}
-            onValueChange={(value: Theme) => setTheme(value)}
+            onValueChange={handleThemeChange}
           >
             <SelectTrigger id="theme" className="w-[180px]">
               <SelectValue placeholder="Select theme" />
