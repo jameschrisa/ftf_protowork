@@ -18,11 +18,13 @@ import { SidebarCard } from "./sidebar-card"
 import { UserProfile } from "./user-profile"
 import * as Tooltip from '@radix-ui/react-tooltip'
 import logo from "../../assets/ftf/logo.svg"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select"
 
 const activeNavClasses = "relative bg-blue-700/20 text-blue-500 before:absolute before:inset-0 before:rounded-lg before:border before:border-white/20 before:shadow-[0_0_15px_rgba(255,255,255,0.1)] before:pointer-events-none"
 
 export default function DashboardLayout() {
   const [isCollapsed, setIsCollapsed] = React.useState(false)
+  const [selectedModule, setSelectedModule] = useState("invested-capital-analysis")
   const location = useLocation()
   const navigate = useNavigate()
   const { hasRunAnalysis } = useAnalysisState()
@@ -235,11 +237,26 @@ export default function DashboardLayout() {
         {/* Top bar */}
         <div className="border-b">
           <div className="container mx-auto flex h-[52px] items-center px-4">
-            {/* Left side - empty space */}
-            <div className="flex-1"></div>
+            {/* Left side - module selector */}
+            <div className="flex items-center">
+              <span className="mr-2 text-sm font-medium">Module:</span>
+              <Select value={selectedModule} onValueChange={setSelectedModule}>
+                <SelectTrigger className="w-[220px]">
+                  <div className="flex items-center">
+                    <div className="h-2 w-2 rounded-full bg-blue-500 mr-2"></div>
+                    <SelectValue />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="invested-capital-analysis">Invested Capital Analysis</SelectItem>
+                  <SelectItem value="operating-analysis" disabled>Operating Analysis</SelectItem>
+                  <SelectItem value="revenue-analysis" disabled>Revenue Analysis</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             
-            {/* Center - main navigation buttons */}
-            <div className="flex items-center gap-2">
+            {/* Right side - main navigation buttons, notifications and user profile */}
+            <div className="flex-1 flex items-center justify-end gap-2">
               {/* Query Request Dialog */}
               <QueryRequestDialogTrigger />
               
@@ -281,12 +298,12 @@ export default function DashboardLayout() {
                   </Tooltip.Portal>
                 </Tooltip.Root>
               </Tooltip.Provider>
-            </div>
-            
-            {/* Right side - notifications and user profile */}
-            <div className="flex items-center gap-4 ml-4">
-              <NotificationButton />
-              <UserProfile />
+              
+              {/* Notifications and user profile */}
+              <div className="flex items-center gap-4 ml-4">
+                <NotificationButton />
+                <UserProfile />
+              </div>
             </div>
           </div>
         </div>
