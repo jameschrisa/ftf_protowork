@@ -3,10 +3,13 @@ import { Button } from "../components/ui/button"
 import { FileText, Clock, Users } from "lucide-react"
 import { useState } from "react"
 import { ClientProfilesTable } from "../components/financial/client-profiles-table"
+import { ClientProfileCard } from "../components/financial/client-profile-card"
+import { ClientSearchDialog } from "../components/financial/client-search-dialog"
 import { clientProfiles } from "../data/client-profiles-data"
 
 export default function ClientProfilesPage() {
   const [activeView, setActiveView] = useState<'overview' | 'risk'>('overview')
+  const [selectedClient, setSelectedClient] = useState(clientProfiles[0])
 
   return (
     <div className="flex-1 space-y-8 p-4 md:p-8 pt-6">
@@ -58,97 +61,15 @@ export default function ClientProfilesPage() {
         <CardContent className="p-6">
           {activeView === 'overview' ? (
             <div className="space-y-6">
-              <div className="grid gap-4 md:grid-cols-3">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      <span>Financial Health Analysis</span>
-                      <Button variant="outline" size="icon">
-                        <FileText className="h-4 w-4" />
-                      </Button>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Comprehensive analysis of client financial health and performance metrics.
-                    </p>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Last Updated:</span>
-                        <span>2024-03-15</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Last Reviewed:</span>
-                        <span>2024-03-20</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Owner:</span>
-                        <span>Financial Analysis Team</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      <span>Client Onboarding Procedures</span>
-                      <Button variant="outline" size="icon">
-                        <FileText className="h-4 w-4" />
-                      </Button>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Detailed procedures for client onboarding and account setup.
-                    </p>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Last Updated:</span>
-                        <span>2024-02-28</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Last Reviewed:</span>
-                        <span>2024-03-10</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Owner:</span>
-                        <span>Client Services Team</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      <span>Relationship Management</span>
-                      <Button variant="outline" size="icon">
-                        <FileText className="h-4 w-4" />
-                      </Button>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Guidelines for maintaining client relationships and communication protocols.
-                    </p>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Last Updated:</span>
-                        <span>2024-03-01</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Last Reviewed:</span>
-                        <span>2024-03-15</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Owner:</span>
-                        <span>Account Management Team</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold">Client Profile</h2>
+                <ClientSearchDialog 
+                  clients={clientProfiles} 
+                  onClientSelect={setSelectedClient} 
+                />
               </div>
+              
+              <ClientProfileCard client={selectedClient} />
 
               {/* Client Profiles Table */}
               <Card>
